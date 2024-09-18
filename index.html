@@ -23,6 +23,26 @@
         document.getElementById('typeform-container').innerHTML = `
             <div class="typeform-widget" data-url="https://pmm3ah6z9pr.typeform.com/to/GwZg02zN" style="width: 100%; height: 500px;"></div>
         `;
+
+        // Initialize timer variables
+        var startTime = null;
+        var endTime = null;
+        var questionTimes = {};
+
+        // Listen for Typeform events
+        window.addEventListener('typeform', function(event) {
+            if (event.data.event === 'question:visible') {
+                // Start timer when question becomes visible
+                startTime = new Date().getTime();
+            } else if (event.data.event === 'question:submit') {
+                // Stop timer when question is submitted
+                endTime = new Date().getTime();
+                var questionId = event.data.questionId;
+                var timeSpent = (endTime - startTime) / 1000; // Convert to seconds
+                questionTimes[questionId] = timeSpent;
+                console.log(`Question ${questionId} took ${timeSpent} seconds`);
+            }
+        });
     </script>
 </body>
 </html>
